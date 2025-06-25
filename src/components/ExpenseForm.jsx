@@ -11,7 +11,7 @@ const ExpenseForm = ({ categories, addExpense }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!amount || isNaN(amount)) {
       setError('Please enter a valid amount');
       return;
@@ -23,12 +23,9 @@ const ExpenseForm = ({ categories, addExpense }) => {
       return;
     }
 
-    // Date validation
-    const today = new Date();
-    const selectedDate = new Date(date);
-    today.setHours(0, 0, 0, 0); // Reset time part for accurate comparison
-    
-    if (selectedDate > today) {
+    // Date validation (fixed)
+    const todayFormatted = format(new Date(), 'yyyy-MM-dd');
+    if (date > todayFormatted) {
       setError('Date must be today or earlier');
       return;
     }
@@ -41,7 +38,7 @@ const ExpenseForm = ({ categories, addExpense }) => {
       note: note.trim(),
       createdAt: new Date().toISOString()
     });
-    
+
     // Reset form
     setAmount('');
     setCategory(categories[0]);
@@ -70,7 +67,7 @@ const ExpenseForm = ({ categories, addExpense }) => {
             placeholder="0.00"
           />
         </div>
-        
+
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="category">
             Category
@@ -82,11 +79,13 @@ const ExpenseForm = ({ categories, addExpense }) => {
             onChange={(e) => setCategory(e.target.value)}
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
         </div>
-        
+
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="date">
             Date
@@ -101,7 +100,7 @@ const ExpenseForm = ({ categories, addExpense }) => {
             required
           />
         </div>
-        
+
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="note">
             Note (Optional)
@@ -116,7 +115,7 @@ const ExpenseForm = ({ categories, addExpense }) => {
             maxLength={100}
           />
         </div>
-        
+
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
